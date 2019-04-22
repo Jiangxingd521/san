@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerCodeImportTemplateInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerCodeImportTemplateInfo">
+        <id column="id" property="id"/>
+        <result column="product_id" property="productId"/>
+        <result column="template_name" property="templateName"/>
+        <result column="left_code_type" property="leftCodeType"/>
+        <result column="left_code_type_id" property="leftCodeTypeId"/>
+        <result column="right_code_type_id" property="rightCodeTypeId"/>
+        <result column="template_remark" property="templateRemark"/>
+        <result column="template_state" property="templateState"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectCodeImportVoByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryCodeCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.CodeImportTemplateVo"
+    >
+        select a.id as templateId,a.template_name,a.template_remark,a.template_state,a.product_id,
+        a.left_code_type_id as leftCodeId,a.right_code_type_id as rightCodeId,
+        e.code_name as leftCodeName,f.code_name as rightCodeName,a.left_code_type,
+        b.product_name,c.series_name,d.brand_name
+        from t_ser_code_import_template_info a
+        left join t_ser_brand_series_product_info b on a.product_id=b.id
+        left join t_ser_brand_series_info c on b.series_id=c.id
+        left join t_ser_brand_info d on c.brand_id=d.id
+        left join t_ser_code_type3_info e on a.left_code_type_id=e.id
+        left join t_ser_code_type3_info f on a.right_code_type_id=f.id
+        left join t_ser_code_type3_info g on a.left_code_type=g.id
+        where 1=1
+        <if test="codeImportState!=null">
+            and a.template_state = #{codeImportState}
+        </if>
+        <if test="brandName!=null and brandName!=''">
+            and d.brand_name like CONCAT('%',#{brandName},'%')
+        </if>
+        <if test="seriesName!=null and seriesName!=''">
+            and c.series_name like CONCAT('%',#{seriesName},'%')
+        </if>
+        <if test="productName!=null and productName!=''">
+            and b.product_name like CONCAT('%',#{productName},'%')
+        </if>
+    </select>
+
+    <select id="selectCodeImportVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryCodeCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.CodeImportTemplateVo"
+    >
+        select a.id as templateId,a.template_name,a.template_remark,a.template_state,a.product_id,
+        a.left_code_type_id as leftCodeId,a.right_code_type_id as rightCodeId,
+        e.code_name as leftCodeName,f.code_name as rightCodeName,a.left_code_type,
+        b.product_name,c.series_name,d.brand_name,c.brand_id,b.series_id
+        from t_ser_code_import_template_info a
+        left join t_ser_brand_series_product_info b on a.product_id=b.id
+        left join t_ser_brand_series_info c on b.series_id=c.id
+        left join t_ser_brand_info d on c.brand_id=d.id
+        left join t_ser_code_type3_info e on a.left_code_type_id=e.id
+        left join t_ser_code_type3_info f on a.right_code_type_id=f.id
+        left join t_ser_code_type3_info g on a.left_code_type=g.id
+        where 1=1
+        <if test="codeImportState!=null">
+            and a.template_state = #{codeImportState}
+        </if>
+        <if test="brandName!=null and brandName!=''">
+            and d.brand_name like CONCAT('%',#{brandName},'%')
+        </if>
+        <if test="seriesName!=null and seriesName!=''">
+            and c.series_name like CONCAT('%',#{seriesName},'%')
+        </if>
+        <if test="productName!=null and productName!=''">
+            and b.product_name like CONCAT('%',#{productName},'%')
+        </if>
+        order by a.template_state asc,a.update_time desc
+        limit #{page},#{limit}
+    </select>
+
+    <select id="selectCodeImportVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryCodeCondition"
+            resultType="long"
+    >
+        select count(1)
+        from t_ser_code_import_template_info a
+        left join t_ser_brand_series_product_info b on a.product_id=b.id
+        left join t_ser_brand_series_info c on b.series_id=c.id
+        left join t_ser_brand_info d on c.brand_id=d.id
+        left join t_ser_code_type3_info e on a.left_code_type_id=e.id
+        left join t_ser_code_type3_info f on a.right_code_type_id=f.id
+        left join t_ser_code_type3_info g on a.left_code_type=g.id
+        where 1=1
+        <if test="codeImportState!=null">
+            and a.template_state = #{codeImportState}
+        </if>
+        <if test="brandName!=null and brandName!=''">
+            and d.brand_name like CONCAT('%',#{brandName},'%')
+        </if>
+        <if test="seriesName!=null and seriesName!=''">
+            and c.series_name like CONCAT('%',#{seriesName},'%')
+        </if>
+        <if test="productName!=null and productName!=''">
+            and b.product_name like CONCAT('%',#{productName},'%')
+        </if>
+        order by a.template_state asc,a.update_time desc
+    </select>
+
+    <select id="selectCodeImportTemplateVo"
+            parameterType="Long"
+            resultType="com.ningyang.os.action.output.vo.web.base.CodeImportTemplateVo"
+    >
+        select a.id as templateId,a.template_state,a.product_id,a.left_code_type_id  as leftCodeId,
+               a.right_code_type_id as rightCodeId,e.code_name as leftCodeName,f.code_name as rightCodeName,
+               a.left_code_type,b.product_name,c.series_name,d.brand_name
+        from t_ser_code_import_template_info a
+                 left join t_ser_brand_series_product_info b on a.product_id = b.id
+                 left join t_ser_brand_series_info c on b.series_id = c.id
+                 left join t_ser_brand_info d on c.brand_id = d.id
+                 left join t_ser_code_type3_info e on a.left_code_type_id = e.id
+                 left join t_ser_code_type3_info f on a.right_code_type_id = f.id
+                 left join t_ser_code_type3_info g on a.left_code_type = g.id
+        where 1 = 1
+          and a.id = #{templateId}
+    </select>
+
+</mapper>

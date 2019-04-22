@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerDealerInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerDealerInfo">
+        <id column="id" property="id"/>
+        <result column="supplier_name" property="dealerName"/>
+        <result column="person_name" property="personName"/>
+        <result column="person_mobile" property="personMobile"/>
+        <result column="dealer_state" property="dealerState"/>
+        <result column="region_id" property="regionId"/>
+        <result column="dealer_address" property="dealerAddress"/>
+        <result column="social_code" property="socialCode"/>
+        <result column="dealer_remark" property="dealerRemark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectDealerVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryDealerCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.DealerVo"
+    >
+        select a.id as dealerId,a.dealer_name,a.person_name,a.person_mobile,a.social_code,
+        a.dealer_address as address,a.dealer_state,a.dealer_remark,a.idata1 as typeState,a.idata2 as dealerType
+        from t_ser_dealer_info a
+        left join t_sys_base_region_info b on a.region_id = b.id
+        where 1 = 1
+        and a.dealer_state = 0 and a.idata2 = 0
+        <if test="dealerName!=null and dealerName!=''">
+            and a.dealer_name like CONCAT('%',#{dealerName},'%')
+        </if>
+        <if test="personName!=null and personName!=''">
+            and a.person_name like CONCAT('%',#{personName},'%')
+        </if>
+        <if test="personMobile!=null and personMobile!=''">
+            and a.person_mobile like CONCAT('%',#{personMobile},'%')
+        </if>
+            limit #{page},#{limit}
+    </select>
+
+    <select id="selectDealerVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryDealerCondition"
+            resultType="long"
+    >
+        select count(1) from t_ser_dealer_info a
+        where 1 = 1 and a.dealer_state = 0 and a.idata2 = 0
+        <if test="dealerName!=null and dealerName!=''">
+            and a.dealer_name like CONCAT('%',#{dealerName},'%')
+        </if>
+        <if test="personName!=null and personName!=''">
+            and a.person_name like CONCAT('%',#{personName},'%')
+        </if>
+        <if test="personMobile!=null and personMobile!=''">
+            and a.person_mobile like CONCAT('%',#{personMobile},'%')
+        </if>
+    </select>
+
+    <select id="selectDealerVoListByCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.DealerVo"
+    >
+        select a.id  as dealerId,a.dealer_name,a.person_name,a.person_mobile,a.social_code,
+               a.dealer_address as address,a.dealer_state,a.dealer_remark,a.idata1 as typeState
+        from t_ser_dealer_info a
+                 left join t_sys_base_region_info b on a.region_id = b.id
+        where 1 = 1
+          and a.dealer_state = 0 and a.idata1=0
+    </select>
+    <select id="isOrderInformation"
+            resultType="java.lang.Integer"
+    >
+    select  count(*) from t_ser_order_info t where t.dealer_id=#{dealerId}
+    </select>
+    <update id="deleteDealer" parameterType="java.lang.Long">
+       update  t_ser_dealer_info t set t.idata2=1 where t.id=#{dealerId}
+    </update>
+</mapper>

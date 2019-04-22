@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerOrderInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerOrderInfo">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="dealer_id" property="dealerId"/>
+        <result column="dealer_code" property="dealerCode"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="series_id" property="seriesId"/>
+        <result column="product_id" property="productId"/>
+        <result column="product_number" property="productNumber"/>
+        <result column="order_state" property="orderState"/>
+        <result column="order_remark" property="orderRemark"/>
+        <result column="user_id" property="userId"/>
+        <result column="financial_id" property="financialId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="idata1" property="idata1"/>
+    </resultMap>
+
+    <select id="selectSaleOrderVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryOrderCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.SaleOrderVo"
+    >
+        SELECT a.id AS orderId,a.order_no,a.dealer_id,b.dealer_name,a.order_state,c.user_name AS createUserName,
+              d.user_name AS financialUserName,a.order_remark AS remark
+        FROM t_ser_order_info a
+                LEFT JOIN t_ser_dealer_info b ON a.dealer_id = b.id
+                LEFT JOIN t_sys_user_info c ON a.user_id = c.id
+                LEFT JOIN t_sys_user_info d ON a.financial_id = d.id
+        WHERE 1 =1
+        <if test="orderState!=null">
+            and a.order_state = #{orderState}
+        </if>
+        <if test="orderNo!=null and orderNo!=''">
+            and a.order_no like CONCAT('%',#{orderNo},'%')
+        </if>
+        <if test="dealerName!=null and dealerName!=''">
+            and b.dealer_name like CONCAT('%',#{dealerName},'%')
+        </if>
+        order by a.create_time desc
+        limit #{page},#{limit}
+    </select>
+
+    <select id="selectSaleOrderVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryOrderCondition"
+            resultType="long"
+    >
+        select count(1) from t_ser_order_info a
+        LEFT JOIN t_ser_dealer_info b ON a.dealer_id = b.id
+        where 1=1
+        <if test="orderState!=null">
+            and a.order_state = #{orderState}
+        </if>
+        <if test="orderNo!=null and orderNo!=''">
+            and a.order_no like CONCAT('%',#{orderNo},'%')
+        </if>
+        <if test="dealerName!=null and dealerName!=''">
+            and b.dealer_name like CONCAT('%',#{dealerName},'%')
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectSaleOrderVoListByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryOrderCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.SaleOrderVo"
+    >
+        SELECT a.id as orderId,a.order_no,a.dealer_id,b.dealer_name,a.order_remark as remark,a.create_time as orderCreateTime
+        FROM t_ser_order_info a
+                 LEFT JOIN t_ser_dealer_info b on a.dealer_id = b.id
+        WHERE 1 = 1
+          and a.order_state = 2 or a.order_state = 3
+          order by a.create_time desc
+    </select>
+
+    <select id="selectOrderCompleteListByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryOrderCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.SaleOrderVo"
+    >
+        SELECT a.id as orderId,a.order_no,a.dealer_id,b.dealer_name,a.order_remark as remark,
+               a.create_time as orderCreateTime, a.update_time as orderCompleteTime
+        FROM t_ser_order_info a
+                 LEFT JOIN t_ser_dealer_info b on a.dealer_id = b.id
+        WHERE 1 = 1
+          and a.order_state = 4
+          order by a.create_time desc
+    </select>
+
+
+</mapper>

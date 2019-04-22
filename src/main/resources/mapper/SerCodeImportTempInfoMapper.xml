@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerCodeImportTempInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerCodeImportTempInfo">
+        <id column="id" property="id"/>
+        <result column="template_id" property="templateId"/>
+        <result column="left_code" property="leftCode"/>
+        <result column="right_code" property="rightCode"/>
+        <result column="left_code_type" property="leftCodeType"/>
+        <result column="right_code_type" property="rightCodeType"/>
+        <result column="import_no" property="importNo"/>
+    </resultMap>
+
+    <select id="callSetCode" statementType="CALLABLE">
+       CALL P_UPD_CommonM()
+    </select>
+
+
+</mapper>

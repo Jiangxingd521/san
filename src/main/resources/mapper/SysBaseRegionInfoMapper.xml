@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SysBaseRegionInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SysBaseRegionInfo">
+        <id column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="region_name" property="regionName"/>
+    </resultMap>
+
+    <select id="selectSysRegionVoList"
+            resultType="com.ningyang.os.action.output.vo.web.base.SysRegionVo"
+    >
+        select a.id,a.id as value,a.pid as parentid,a.region_name as label
+        from t_sys_base_region_info a
+    </select>
+
+    <select id="selectRegionVo"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryRegionCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.RegionVo"
+    >
+        select a.id,a.pid as parentid,a.region_name as label
+        from t_sys_base_region_info a
+        where 1 = 1
+          and a.pid = #{pid}
+    </select>
+
+    <select id="selectRegionThreeList"
+            parameterType="String"
+            resultType="com.ningyang.os.action.output.vo.web.base.SysRegionThreeVo"
+    >
+        select a.id as id3,a.pid as id2,b.pid as id1
+          from t_sys_base_region_info a left join t_sys_base_region_info b on a.pid = b.id
+        where a.id = #{childId}
+    </select>
+
+
+
+</mapper>

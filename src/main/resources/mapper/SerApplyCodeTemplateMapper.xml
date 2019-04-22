@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerApplyCodeTemplateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerApplyCodeTemplate">
+        <id column="id" property="id"/>
+        <result column="center_id" property="centerId"/>
+        <result column="code_order" property="codeOrder"/>
+        <result column="code_content" property="codeContent"/>
+        <result column="code_position" property="codePosition"/>
+        <result column="code_position_type" property="codePositionType"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="insertBatch" parameterType="com.ningyang.os.action.input.command.web.serve.TemplateCodeCommand">
+        insert into ${tableName}
+        (center_id, code_order, code_content, code_position, code_position_type, create_time, update_time)
+        values
+        <foreach collection="list" item="code" index="index" separator=",">
+            (#{code.centerId,jdbcType=BIGINT},#{code.codeOrder,jdbcType=VARCHAR},
+             #{code.codeContent,jdbcType=VARCHAR},#{code.codePosition,jdbcType=BIGINT},
+             #{code.codePositionType,jdbcType=BIGINT},
+            #{code.createTime,jdbcType=TIMESTAMP}, #{code.updateTime,jdbcType=TIMESTAMP})
+        </foreach>
+    </insert>
+
+    <select id="selectCodeVoList"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryApplyCodeCondition"
+            resultMap="BaseResultMap"
+    >
+        select a.id,a.center_id,a.code_order,a.code_content,a.code_position,a.code_position_type
+        from ${tableName} a
+        where 1=1
+        <if test="codeOrder!=null and codeOrder!=''">
+            and a.code_order = #{codeOrder}
+        </if>
+    </select>
+
+    <select id="selectCodeByTables"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryApplyCodeCondition"
+            resultMap="BaseResultMap"
+    >
+        select DISTINCT code_content,code_position,code_position_type
+        from ${tableName}
+        where 1 = 1
+          and code_content = #{codeContent}
+    </select>
+
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SysRoleInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SysRoleInfo">
+        <id column="id" property="id"/>
+        <result column="role_name" property="roleName"/>
+        <result column="role_state" property="roleState"/>
+        <result column="role_flag" property="roleFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectRoleVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryRoleCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.SysRoleVo"
+    >
+        SELECT a.id as roleId,a.role_name,a.role_flag,a.role_state
+        FROM t_sys_role_info a
+        ORDER BY a.create_time ASC limit #{page},#{limit}
+    </select>
+
+    <select id="selectRoleVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryRoleCondition"
+            resultType="long"
+    >
+        SELECT COUNT(1) FROM t_sys_role_info
+    </select>
+
+    <select id="selectRoleVoByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryRoleCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.SysRoleVo"
+    >
+        SELECT a.id as roleId,a.role_name,a.role_flag,a.role_state
+        FROM t_sys_role_info a
+        WHERE a.role_state = 0
+          and a.role_flag = 0
+        ORDER BY a.create_time ASC
+    </select>
+
+</mapper>

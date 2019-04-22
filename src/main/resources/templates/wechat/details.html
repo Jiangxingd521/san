@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<html>
+	<head th:include="wechat/node_header :: nodeHeader"/>
+<body>
+	<div class="views_box">
+		<div class="views_page views_details">
+			<div class="details_top">
+				<div class="details_img">
+                    <img  th:src="@{/resource/images/get_img.png}" >
+                </div>
+				<div class="details_text">
+					<p th:utext="${'<span>品牌名称：</span>'+goodsInfo?.brandName}"></p>
+					<p  th:utext="${'<span>系列名称：</span>'+goodsInfo?.brandSeriesName}"><span>系列名称：</span>酒</p>
+					<p  th:utext="${'<span>产品名称：</span>'+goodsInfo?.brandSeriesProductName}"><span>产品名称：</span>酒</p>
+					<p  th:utext="${'<span>价 格：</span>'+productInfo?.getMarketPrice()+'元/瓶'}"><span>价 格：</span>1000元/瓶</p>
+					<p  th:utext="${'<span>扫描次数：</span>'+scanns+'<b>（同一IP下只记录一次次数）'}"><span>扫描次数：</span>5次<b>（同一IP下只记录一次次数）</b></p>
+					<p  th:utext="${'<span>追溯结果：</span><i>此产品信息第一次查询于 '+#dates.format(memberScanning?.createTime, 'yyyy年-MM月-dd日 HH时:MM分:ss秒')}"><span>追溯结果：</span><i>此产品信息第一次查询于 2018-01-01  12:00:00</i></p>
+				</div>
+			</div>
+			<div class="details_bottom">
+				<div class="details_logo">
+                    <img  th:src="@{/resource/images/inner_logo.png}" >
+
+                </div>
+				<p>销售区域：全国</p>
+				<p th:text="${'规格:'+productInfo?.seriesStandard}"></p>
+			</div>
+			<div class="phone">
+				<p>服务热线：000-0000-0000</p>
+			</div>
+			<div class="cz_btn">
+				<a href="../wechat/prize" class="btn">返回首页</a>
+				<a  th:if="${serPrizeSetInfo!=null}" th:href="@{${'../wechat/activity?prizeSetId='+serPrizeSetInfo?.prizeSetId+'&goodid='+goodsInfo?.id}}" class="btn">活动规则</a>
+			</div>
+			<div class="footer">技术详情：山东三向溯源信息科技有限公司</div>
+		</div>
+	</div>
+</body>
+</html>

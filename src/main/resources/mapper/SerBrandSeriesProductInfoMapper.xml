@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerBrandSeriesProductInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerBrandSeriesProductInfo">
+        <id column="id" property="id"/>
+        <result column="series_id" property="seriesId"/>
+        <result column="series_name" property="seriesName"/>
+        <result column="product_name" property="productName"/>
+        <result column="short_title" property="shortTitle"/>
+        <result column="key_word" property="keyWord"/>
+        <result column="code_number" property="codeNumber"/>
+        <result column="series_standard" property="seriesStandard"/>
+        <result column="market_price" property="marketPrice"/>
+        <result column="sales_price" property="salesPrice"/>
+        <result column="code_69" property="code69"/>
+        <result column="product_remark" property="productRemark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="product_state" property="productState"/>
+    </resultMap>
+
+    <select id="selectProductVoByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryBrandSeriesProductCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.ProductVo"
+    >
+        select a.series_id,a.id as productId,a.product_name,a.code_number,a.series_standard,a.market_price,
+        a.sales_price,a.code_69,a.product_remark,a.product_state,b.series_name,c.brand_name
+        from t_ser_brand_series_product_info a
+                left join t_ser_brand_series_info b on a.series_id = b.id
+                left join t_ser_brand_info c on b.brand_id = c.id
+        where 1=1
+        <if test="productState!=null">
+            and a.product_state = #{productState}
+        </if>
+        order by a.series_id asc
+    </select>
+
+    <select id="selectBrandSeriesProductVo"
+            parameterType="Long"
+            resultType="com.ningyang.os.action.output.vo.web.base.BrandSeriesProductVo"
+    >
+        select a.series_id,a.id as productId,b.brand_id
+        from t_ser_brand_series_product_info a
+                 left join t_ser_brand_series_info b on a.series_id = b.id
+        where 1 = 1
+          and a.id = #{productId}
+    </select>
+
+    <select id="selectCodeTypeVoByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryBrandSeriesProductCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.CodeTypeVo"
+    >
+        select a.code_id,b.code_name
+        from t_ser_brand_series_product_code_info a
+                 left join t_ser_code_type3_info b on a.code_id = b.id
+        where 1=1
+        <if test="productId!=null">
+           and a.product_id = #{productId}
+        </if>
+    </select>
+
+    <select id="selectSeriesProductVoByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryBrandSeriesProductCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.SeriesProductVo"
+    >
+        select a.id as productId,a.product_name from t_ser_brand_series_product_info a
+        where a.product_state=0
+        <if test="seriesId!=null">
+            and a.series_id = #{seriesId}
+        </if>
+    </select>
+
+    <select id="selectApiProductVoList" resultType="com.ningyang.os.action.output.vo.api.ApiProductVo">
+        select DISTINCT a.product_name from t_ser_brand_series_product_info a where a.product_state=0
+    </select>
+
+    <select id="selectBrandSeriesProductNameVo"
+            parameterType="Long"
+            resultType="com.ningyang.os.action.output.vo.web.serve.BrandSeriesProductNameVo"
+    >
+        select c.brand_name,b.series_name,a.product_name
+        from t_ser_brand_series_product_info a
+        left join t_ser_brand_series_info b on a.series_id=b.id
+        left join t_ser_brand_info c on b.brand_id=c.id
+        where a.id = #{productId}
+    </select>
+
+    <select id="selectProductVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryBrandSeriesProductCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.ProductVo"
+    >
+        select a.series_id,a.id as productId,a.product_name,a.code_number,a.series_standard,a.market_price,
+        a.sales_price,a.code_69,a.product_remark,a.product_state,b.series_name,c.brand_name
+        from t_ser_brand_series_product_info a
+        left join t_ser_brand_series_info b on a.series_id = b.id
+        left join t_ser_brand_info c on b.brand_id = c.id
+        where 1=1
+        <if test="productState!=null">
+            and a.product_state = #{productState}
+        </if>
+        order by a.product_state ,a.update_time desc
+        limit #{page},#{limit}
+    </select>
+
+    <select id="selectProductVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryBrandSeriesProductCondition"
+            resultType="long"
+    >
+        select count(1) from t_ser_brand_series_product_info a where 1=1
+        <if test="productState!=null">
+            and a.product_state = #{productState}
+        </if>
+        order by a.product_state ,a.update_time desc
+    </select>
+
+</mapper>

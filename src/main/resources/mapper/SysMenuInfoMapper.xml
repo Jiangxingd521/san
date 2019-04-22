@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SysMenuInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SysMenuInfo">
+        <id column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="menu_name" property="menuName"/>
+        <result column="menu_type" property="menuType"/>
+        <result column="menu_icon" property="menuIcon"/>
+        <result column="menu_path" property="menuPath"/>
+        <result column="menu_permission" property="menuPermission"/>
+        <result column="menu_sort" property="menuSort"/>
+        <result column="menu_state" property="menuState"/>
+        <result column="menu_remark" property="menuRemark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectByUserId"
+            parameterType="String"
+            resultType="String"
+    >
+        SELECT DISTINCT a.menu_permission
+        FROM t_sys_menu_info a
+                 LEFT JOIN t_sys_role_menu_info b ON a.id = b.menu_id
+        WHERE a.menu_type = 1
+          and a.menu_state = 0
+          and b.role_id in
+              (select c.role_id from t_sys_user_role_info c where c.user_id = #{userId})
+    </select>
+
+    <select id="selectUserBarMenuVoList"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryMenuCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.BarMenuVo"
+    >
+        SELECT a.id,a.pid AS parentId,a.menu_name AS label,a.menu_path AS href,a.menu_icon AS icon
+        FROM t_sys_menu_info a
+        WHERE 1=1 AND a.menu_state=0 AND a.menu_type=0 AND a.id IN (
+        SELECT DISTINCT a.menu_id FROM t_sys_navigation_bar_menu_info a WHERE a.bar_id IN(
+        SELECT a.bar_id FROM t_sys_role_navigation_bar_info a
+          LEFT JOIN t_sys_user_role_info b ON a.role_id=b.role_id
+        WHERE b.user_id=#{userId}
+        <choose>
+            <when test="barId!=0">
+                AND a.bar_id = #{barId}
+            </when>
+            <otherwise>
+                AND a.bar_id =
+                (select id from t_sys_navigation_bar_info where bar_sort=
+                (SELECT max( d.bar_sort ) FROM t_sys_navigation_bar_info d
+                left join t_sys_role_navigation_bar_info e on d.id = e.bar_id
+                where e.role_id in
+                (select f.role_id from t_sys_user_role_info f where f.user_id = #{userId})
+                ))
+            </otherwise>
+        </choose>
+        ))
+    </select>
+
+    <select id="selectSysMenuVoList"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryMenuCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.SysMenuVo"
+    >
+        select a.id, a.pid as parentid, a.menu_name as label, a.menu_permission as code, a.menu_type as type,
+        a.menu_sort as sort, a.menu_path as path, a.menu_icon as icon, a.menu_remark as remark
+        from t_sys_menu_info a where a.menu_state=0
+        <if test="menuType!=-1">
+            and a.menu_type = #{menuType}
+        </if>
+        order by a.menu_sort
+    </select>
+
+</mapper>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head th:include="wechat/node_header::nodeHeader"/>
+<body>
+	<div class="views_box">
+		<div class="views_top top_bg"></div>
+
+		<div class="views_page views_getpage">
+			<div class="top_title">您查看的产品名称为</div>
+			<div class="top_type"><em th:text="${goodsInfo?.brandSeriesProductName}"></em></div>
+			<div class="get_imgs">
+				<img  th:src="@{/resource/images/get_img.png}" >
+			</div>
+			<div class="cz_btn">
+				<!-- 未领红包 -->
+				<a href="JavaScript:;" onclick="prize()" class="get_btn" th:if="${isHB}">领取红包</a>
+				<a href="JavaScript:;" onclick="prize()" class="get_btn" th:if="${isPT}">领取积分</a>
+				<!-- 已领红包 -->
+				 <div class="get_tips">
+					<p th:if="${prizeRecodeInfo?.cashTime !=null}" th:text="${'本二维码已于'+#dates.format(prizeRecodeInfo?.cashTime, 'yyyy年-MM月-dd日 HH时:mm分:ss秒')+'扫描过1次'}"></p>
+					<p  th:if="${prizeRecodeInfo?.cashTime !=null}" th:text="${'并领取红包'+prizeRecodeInfo?.money+'元'}"></p>
+					 <p th:if="${goodsInfo?.goodsState==0}">本二维码尚未使用</p>
+					 <p th:if="${goodsInfo?.goodsState==1}">本二维码尚未激活</p>
+					 <p th:if="${goodsInfo?.goodsState==2  and prizeRecodeInfo==null}">本产品为正品</p>
+				 </div>
+				<a th:if="${goodsInfo!=null}" th:href="@{${'/wechat/details?goodid='+goodsInfo?.id}}" class="btn">产品详情</a>
+				<a th:if="${serPrizeSetInfo!=null}" th:href="@{${'../wechat/activity?prizeSetId='+serPrizeSetInfo?.prizeSetId+'&goodid='+goodsInfo?.id}}" class="btn">活动规则</a>
+			</div>
+			<div class="footer">技术详情：山东三向溯源信息科技有限公司</div>
+		</div>
+	</div>
+</body>
+</html>
+<script>
+    function prize() {
+        var prizeRecodeId= [[${prizeRecodeInfo?.prizeRecodeId}]]
+        var userAgent = window.navigator.userAgent.toLowerCase();
+        if (userAgent.indexOf('micromessenger') == -1) {
+            alert('请在微信中扫码！')
+            return ;
+        }
+
+        window.location.href='../wechat/prize?prizeRecodeId='+prizeRecodeId;
+
+    }
+
+</script>
+
+

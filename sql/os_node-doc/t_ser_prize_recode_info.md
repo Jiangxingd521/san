@@ -1,0 +1,39 @@
+# 奖项记录（布奖、兑奖）(t_ser_prize_recode_info)
+| 列名   | 类型   | KEY  | 可否为空 | 注释   |
+| ---- | ---- | ---- | ---- | ---- |
+|prize_recode_id|bigint(20)|PRI|否||
+|order_id|bigint(20)||是|订单id|
+|order_no|varchar(32)||是|订单编号|
+|product_box_code|varchar(255)||是|产品箱码|
+|product_code|varchar(1024)|UNI|否|产品编码（内码）|
+|record_count|int(255)||是|受影响数量|
+|prize_set_id|bigint(20)||是|奖项设定id|
+|prize_set_uuid|varchar(255)||是|奖项设定uuid|
+|prize_set_name|varchar(255)||是|布奖名称|
+|prod_id|bigint(20)||是|产品id|
+|member_type|bigint(11)||是|会员类型|
+|region_id|bigint(20)||是|布奖区域|
+|prize_quantity|int(11)||是|布奖数量|
+|money|decimal(5,2)||是|红包额度|
+|ponit|int(11)||是|积分额度|
+|prize_set_type|int(11)||是|布奖类型|
+|prize_mode_type|int(11)||是|布奖模式（1：随机，2：平均）|
+|card_money|int(11)||是|卡券消费额度|
+|card_coupon_money|int(11)||是|卡券优惠额度|
+|prize_state|int(11)||是|布奖状态（0：未激活，1：激活）|
+|track_no|varchar(32)||是|快递单号|
+|cash_time|datetime||是|兑奖时间|
+|open_id|varchar(32)||是|中奖人id|
+|prize_start_date|datetime||是|布奖开始日期|
+|prize_end_date|datetime||是|布奖结束日期|
+|user_id|bigint(20)||是|创建人|
+|idata1|int(11)||是||
+|idata2|int(11)||是||
+|idata3|int(11)||是||
+|idata4|int(11)||是||
+|sdata1|varchar(255)||是||
+|sdata2|varchar(255)||是||
+|sdata3|varchar(255)||是||
+|sdata4|varchar(255)||是||
+|create_time|datetime||是|创建时间|
+|update_time|datetime||是|修改时间|

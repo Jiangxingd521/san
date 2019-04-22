@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerGoodsInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerGoodsInfo">
+        <id column="id" property="id"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="brand_series_id" property="brandSeriesId"/>
+        <result column="brand_series_name" property="brandSeriesName"/>
+        <result column="brand_series_product_id" property="brandSeriesProductId"/>
+        <result column="brand_series_product_name" property="brandSeriesProductName"/>
+        <result column="M1" property="m1"/>
+        <result column="M2" property="m2"/>
+        <result column="M3" property="m3"/>
+        <result column="M4" property="m4"/>
+        <result column="M5" property="m5"/>
+        <result column="M6" property="m6"/>
+        <result column="M7" property="m7"/>
+        <result column="M8" property="m8"/>
+        <result column="M9" property="m9"/>
+        <result column="M10" property="m10"/>
+        <result column="M1_remark" property="m1Remark"/>
+        <result column="M2_remark" property="m2Remark"/>
+        <result column="M3_remark" property="m3Remark"/>
+        <result column="M4_remark" property="m4Remark"/>
+        <result column="M5_remark" property="m5Remark"/>
+        <result column="M6_remark" property="m6Remark"/>
+        <result column="M7_remark" property="m7Remark"/>
+        <result column="M8_remark" property="m8Remark"/>
+        <result column="M9_remark" property="m9Remark"/>
+        <result column="M10_remark" property="m10Remark"/>
+        <result column="goods_state" property="goodsState"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+</mapper>

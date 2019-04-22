@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.MemberPointRuleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.MemberPointRule">
+        <id column="id" property="id"/>
+        <result column="rule_type" property="ruleType"/>
+        <result column="rule_value" property="ruleValue"/>
+        <result column="user_id" property="userId"/>
+        <result column="idata1" property="idata1"/>
+        <result column="idata2" property="idata2"/>
+        <result column="idata3" property="idata3"/>
+        <result column="idata4" property="idata4"/>
+        <result column="sdata1" property="sdata1"/>
+        <result column="sdata2" property="sdata2"/>
+        <result column="sdata3" property="sdata3"/>
+        <result column="sdata4" property="sdata4"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectMemberPointRuleVoListByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryMemberCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.MemberPointRuleVo"
+    >
+        select a.id as ruleId,a.rule_type as ruleName,a.rule_value,b.user_name,a.iData1 as ruleState,a.sdata1 as rule_deleteid
+        from t_member_point_rule a left join t_sys_user_info b on a.user_id = b.id
+        where 1=1 and  a.sdata1 = 0
+        <if test="ruleState!=null">
+            and a.iData1 = #{ruleState}
+        </if>
+    </select>
+    <select id="getListfindName"  resultType="java.lang.Integer">
+    select  count(*)  from t_member_point_rule t where t.sdata1=0 and t.rule_type = #{ruleName}
+    <if test="ruleId!=0">
+        or t.id= #{ruleId}
+    </if>
+    </select>
+    <update id="deletePointRuleById" parameterType="java.lang.Long">
+    update t_member_point_rule set sdata1=1 where id=#{ruleId}
+    </update>
+</mapper>

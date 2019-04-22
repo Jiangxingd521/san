@@ -1,0 +1,234 @@
+@charset 'UTF-8';
+/*
+    @authors xiaofeng (422972230@qq.com)
+    @date 2018-11-25
+    @veesion $Id$
+*/
+html, body, div, span, applet, object, iframe, table, caption,
+tbody, tfoot, thead, tr, th, td, del, dfn, em, font, img, ins,
+kbd, q, s, samp, small, strike, strong, sub, sup, tt, var,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr,
+acronym, address, big, cite, code, i, b, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend {
+    vertical-align: baseline;
+    font-family: inherit;
+    font-weight: normal;
+    font-style: normal;
+    outline: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+a,u{
+    text-decoration: none;
+}
+input[type="text"],input[type="password"],textarea,select,button{
+    font-size: 1rem;
+    font-family: Microsoft YaHei,SimSun,Arial;
+    -webkit-appearance: none;
+    resize: none;
+    border:0;
+    outline: 0;
+    -webkit-user-select: text;
+}
+ input[type="range"] {
+    border-radius: 15px;
+    background-color: #f8b551;
+    border: 2px solid #eaeaea;
+    -webkit-appearance: none;
+    height:0.4rem;
+    position: relative;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    cursor: default;
+    top: -5px;
+    height: 1.2rem;
+    width: 1.2rem;
+    border-radius: 50%;
+    background-color: #f8b551;
+    border: 2px solid #eaeaea;
+}
+li{
+    list-style: none;
+}
+table{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+html{max-width: 640px;margin: 0 auto;}
+body{font-family: Arial,Microsoft YaHei,SimSun; line-height: 1.4; color: #000;background: #f7f7f7;}
+img{
+    width: 100%;
+    border:0;
+}
+*{
+    box-sizing: border-box;
+    -webkit-user-select:none;
+    -webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+    -webkit-touch-callout: none;
+}
+/* placeholder="" */
+
+/*顶部*/
+.views_top{
+    position: absolute;
+    max-width: 640px;
+    top: 0;
+    width: 100%;
+    z-index: 0;
+    height: 14rem;
+    background-color: #1f51f2;
+}
+.top_bg{
+    background: url(../images/dui_topbg.jpg) no-repeat;
+    background-size: cover;
+}
+.footer{
+    position: absolute;
+    bottom: 0;
+    font-size: 0.8rem;
+    color:#666666;
+    width: 100%;
+    text-align: center;
+    line-height: 2rem;
+}
+.views_page{
+    max-width: 640px;
+     position: absolute;
+    z-index: 1;
+    width: 100%;
+    min-height: 100%;
+    padding-bottom: 3rem;
+}
+.top_title{
+    text-align: center;
+    color:#fff;
+    line-height: 2;
+    font-size: 1rem;
+    padding-top: 1.5rem;
+}
+.top_type{
+    text-align: center;
+}
+.top_type em{
+    display: inline-block;
+    padding: 0 1.5rem;
+    font-size: 1rem;
+    background: #001e7e;
+    color:#f6ff00;
+    line-height: 1.8;
+}
+/*顶部 end*/
+.get_imgs{
+    background: #fff;
+    padding: 3rem;
+    margin: 2rem auto 0;
+    border-radius: 50%;
+    overflow: hidden;
+    width: 18rem;
+    height: 18rem;
+}
+.get_imgs img{
+    width: 100%;
+}
+
+.cz_btn{
+    text-align: center;
+}
+.cz_btn a:active{
+    opacity: 0.8;
+}
+.get_tips{
+    padding: 1rem 0;
+    text-align: center;
+    color:#f70000;
+}
+.cz_btn .get_btn{
+    width: 11rem;
+    display: block;
+    margin: 1rem auto 0;
+    font-size: 1.1rem;
+    line-height: 2.8rem;
+    height: 3.5rem;
+    color:#f6ff00;
+    background: url(../images/get_btnbg.png) no-repeat;
+    background-size: 100%;
+}
+.cz_btn .btn{
+    display: block;
+    width: 9rem;
+    border-radius: 3rem;
+    border:1px solid #89a2f3;
+    line-height: 2rem;
+    text-align: center;
+    color:#89a2f3;
+    margin: 1rem auto 0;
+}
+.activity_title{
+    line-height: 4rem;
+    text-align: center;
+    color:#fff;
+    font-size: 1.1rem;
+}
+.activity_inner{
+    width: 94%;
+    font-size: 0.9rem;
+    margin: 0 auto;
+    height: 15rem;
+    border-radius: 0.2rem;
+    background: #fff;
+    padding: 0.5rem 1rem;
+}
+.activity_inner p{
+    line-height: 1.4;
+    padding-bottom: 0.5rem; 
+}
+.details_top{
+    background: #fff;
+    overflow: hidden;
+    color:#000000;
+    padding: 0.5rem 1rem;
+}
+.details_img{
+    float: left;
+    width: 35%;
+    padding: 0.5rem 0.5rem 0 0;
+}
+.details_text{
+    font-size: 0.8rem;
+    width: 65%;
+    float: left;
+}
+.details_text p{
+    position: relative;
+    padding-left: 4.5rem;
+}
+
+.details_text p i{
+    color: red;
+}
+.details_text p span{
+    position: absolute;
+    left: 0;
+}
+.details_bottom{
+    background: #fff;
+    margin: 0.8rem 0;
+}
+.details_logo{
+    text-align: center;
+}
+.details_logo img{
+    width: 4.5rem;
+}
+.details_bottom{
+    line-height: 1.6;
+    padding: 0 0.5rem 0.5rem;
+    font-size: 0.9rem;
+}
+.phone{
+    padding: 0 0.5rem;
+    line-height: 2.8rem;
+    background: #fff;
+}

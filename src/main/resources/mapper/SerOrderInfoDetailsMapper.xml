@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerOrderInfoDetailsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerOrderInfoDetails">
+        <id column="id" property="id"/>
+        <result column="order_id" property="orderId"/>
+        <result column="product_id" property="productId"/>
+        <result column="box_number" property="boxNumber"/>
+        <result column="user_id" property="userId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectOrderDetailVoList"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryOrderCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.OrderDetailVo"
+    >
+        select a.order_id,a.product_id,a.user_id,d.brand_name,
+        c.series_name,b.product_name,b.sales_price
+        from t_ser_order_info_details a
+        left join t_ser_brand_series_product_info b on a.product_id=b.id
+        left join t_ser_brand_series_info c on b.series_id=c.id
+        left join t_ser_brand_info d on c.brand_id=d.id
+        where 1=1
+        <if test="productId!=null">
+            and a.product_id = #{productId}
+        </if>
+        <if test="orderId!=null">
+            and a.order_id = #{orderId}
+            <if test="orderSaleFlag!=0">
+                and a.user_id = #{userId} or a.order_id=-1
+            </if>
+        </if>
+        group by a.order_id,a.product_id,a.user_id,d.brand_name,
+        c.series_name,b.product_name,b.sales_price
+    </select>
+
+    <select id="selectOrderDetailBoxCount"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryOrderCondition"
+            resultType="int"
+    >
+        select sum(a.box_number) from t_ser_order_info_details a
+        where 1=1
+        <if test="productId!=null">
+            and a.product_id = #{productId}
+        </if>
+        <if test="orderId!=null">
+            and a.order_id = #{orderId}
+            <if test="orderSaleFlag!=0">
+                and a.user_id = #{userId} or a.order_id=-1
+            </if>
+        </if>
+    </select>
+
+    <delete id="deleteOrderByNull">
+        DELETE FROM t_ser_order_info_details WHERE order_id = -1
+    </delete>
+
+</mapper>

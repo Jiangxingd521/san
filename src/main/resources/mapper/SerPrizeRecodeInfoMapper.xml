@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerPrizeRecodeInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerPrizeRecodeInfo">
+        <id column="prize_recode_id" property="prizeRecodeId" />
+        <result column="order_id" property="orderId" />
+        <result column="order_no" property="orderNo" />
+        <result column="product_box_code" property="productBoxCode" />
+        <result column="product_code" property="productCode" />
+        <result column="record_count" property="recordCount" />
+        <result column="prize_set_id" property="prizeSetId" />
+        <result column="prize_set_uuid" property="prizeSetUuid" />
+        <result column="prize_set_name" property="prizeSetName" />
+        <result column="prod_id" property="prodId" />
+        <result column="member_type" property="memberType" />
+        <result column="region_id" property="regionId" />
+        <result column="prize_quantity" property="prizeQuantity" />
+        <result column="money" property="money" />
+        <result column="ponit" property="ponit" />
+        <result column="prize_set_type" property="prizeSetType" />
+        <result column="prize_mode_type" property="prizeModeType" />
+        <result column="card_money" property="cardMoney" />
+        <result column="card_coupon_money" property="cardCouponMoney" />
+        <result column="prize_state" property="prizeState" />
+        <result column="track_no" property="trackNo" />
+        <result column="cash_time" property="cashTime" />
+        <result column="open_id" property="openId" />
+        <result column="prize_start_date" property="prizeStartDate" />
+        <result column="prize_end_date" property="prizeEndDate" />
+        <result column="user_id" property="userId" />
+        <result column="idata1" property="idata1" />
+        <result column="idata2" property="idata2" />
+        <result column="idata3" property="idata3" />
+        <result column="idata4" property="idata4" />
+        <result column="sdata1" property="sdata1" />
+        <result column="sdata2" property="sdata2" />
+        <result column="sdata3" property="sdata3" />
+        <result column="sdata4" property="sdata4" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        insert ignore into t_ser_prize_recode_info
+        (order_no, product_code, prize_set_id, prize_set_name, prod_id, member_type, region_id,money, ponit,
+        prize_set_type, prize_mode_type,card_money, card_coupon_money,prize_state,prize_start_date,
+        prize_end_date, user_id, sdata1, create_time,update_time)
+        values
+        <foreach collection="list" item="code" index="index" separator=",">
+            (#{code.orderNo},#{code.prCode},#{code.prizeSetId},#{code.prizeSetName},
+            #{code.prodId},#{code.memberType},#{code.regionId},#{code.money},
+            #{code.ponit},#{code.prizeSetType},#{code.prizeModeType},#{code.cardMoney},
+            #{code.cardCouponMoney},#{code.prizeState},#{code.prizeStartDate},#{code.prizeEndDate},
+            #{code.userId},#{code.sdata1},#{code.createTime},#{code.updateTime})
+        </foreach>
+    </insert>
+
+
+    <select id="selectPrizeSetLogVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryPrizeCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.PrizeSetLogVo"
+    >
+        select a.prize_recode_id as recodeId,a.prize_set_name,b.product_name,d.prize_type_name,e.user_name,a.prize_state
+        from t_ser_prize_recode_info a
+                 left join t_ser_brand_series_product_info b on a.prod_id = b.id
+                 left join t_ser_prize_set_info c on a.prize_set_id = c.prize_set_id
+                 left join t_ser_prize_type_info d on c.prize_set_type = d.prize_type_id
+                 left join t_sys_user_info e on a.user_id = e.id
+        order by a.update_time desc
+
+        limit #{page},#{limit}
+    </select>
+
+    <select id="selectPrizeSetLogVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryPrizeCondition"
+            resultType="long"
+    >
+        select count(1) from t_ser_prize_recode_info a
+    </select>
+
+
+    <select id="selectPrizeTicketLogVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryPrizeCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.PrizeTicketLogVo"
+    >
+        select b.brand_series_product_name as productName,a.cash_time as ticketTime,a.prize_set_name,
+               d.prize_type_name,e.order_no,f.dealer_name
+        from t_ser_prize_recode_info a
+                 left join t_ser_goods_info b on a.product_code=b.M1
+                 left join t_ser_prize_set_info c on a.prize_set_id =c.prize_set_id
+                 left join t_ser_prize_type_info d on c.prize_set_type=d.prize_type_id
+                 left join t_ser_order_info e on a.order_no = e.order_no
+                 left join t_ser_dealer_info f on e.dealer_id=f.id
+        where b.goods_state = 3
+        order by a.cash_time desc
+                 limit #{page},#{limit}
+    </select>
+
+    <select id="selectPrizeTicketLogVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryPrizeCondition"
+            resultType="long"
+    >
+        select count(1)
+        from t_ser_prize_recode_info a
+                 left join t_ser_goods_info b on a.product_code=b.M1
+                 left join t_ser_prize_set_info c on a.prize_set_id =c.prize_set_id
+                 left join t_ser_prize_type_info d on c.prize_set_type=d.prize_type_id
+                 left join t_ser_order_info e on a.order_no = e.order_no
+                 left join t_ser_dealer_info f on e.dealer_id=f.id
+        where b.goods_state = 3
+    </select>
+
+</mapper>

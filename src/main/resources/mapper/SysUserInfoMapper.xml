@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SysUserInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SysUserInfo">
+        <id column="id" property="id"/>
+        <result column="pid" property="pid"/>
+        <result column="user_name" property="userName"/>
+        <result column="login_name" property="loginName"/>
+        <result column="login_password" property="loginPassword"/>
+        <result column="login_password_plaintext" property="loginPasswordPlaintext"/>
+        <result column="user_state" property="userState"/>
+        <result column="user_type" property="userType"/>
+        <result column="authorization_code" property="authorizationCode"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryUserCondition"
+            resultMap="BaseResultMap"
+    >
+        SELECT * FROM t_sys_user_info WHERE 1=1
+        <if test="username!=null">
+            AND login_name = #{username}
+        </if>
+        <if test="password!=null">
+            AND login_password = #{password}
+        </if>
+        <if test="userType!=null">
+            AND user_type = #{userType}
+        </if>
+        <if test="userState!=null">
+            AND user_state=#{userState}
+        </if>
+        <if test="authorizationCode!=null">
+            AND authorization_code = #{authorizationCode}
+        </if>
+    </select>
+
+    <select id="selectSysUserVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryUserCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.SysUserVo"
+    >
+        SELECT a.id as userId,a.user_name,a.login_name,a.user_type,a.user_state,a.pid
+        FROM t_sys_user_info a WHERE 1=1
+        <if test="username!=null">
+            AND a.user_name LIKE CONCAT('%',#{username},'%')
+        </if>
+        <if test="userFlag==0">
+            <if test="pid!=null and pid!=0">
+                AND a.pid = #{pid}
+            </if>
+        </if>
+        <if test="userState!=null">
+            AND a.user_state=#{userState}
+        </if>
+        <if test="userType!=null">
+            AND a.user_type=#{userType}
+        </if>
+        limit #{page},#{limit}
+    </select>
+
+    <select id="selectSysUserVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryUserCondition"
+            resultType="long"
+    >
+        SELECT COUNT(1) FROM t_sys_user_info a WHERE 1=1
+        <if test="username!=null">
+            AND a.user_name LIKE CONCAT('%',#{username},'%')
+        </if>
+        <if test="userFlag==0">
+            <if test="pid!=null and pid!=0">
+                AND a.pid = #{pid}
+            </if>
+        </if>
+        <if test="userState!=null">
+            AND a.user_state=#{userState}
+        </if>
+        <if test="userType!=null">
+            AND a.user_type=#{userType}
+        </if>
+    </select>
+
+
+</mapper>

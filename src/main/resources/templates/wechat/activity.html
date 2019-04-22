@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head th:include="wechat/node_header :: nodeHeader"/>
+
+<body>
+	<div class="views_box">
+		<div class="views_top"></div>
+		<div class="views_page">
+			<div class="activity_title">活动规则</div>
+			<div class="activity_inner">
+				<p th:text="${content==null?'':content}"></p>
+
+			</div>
+			<div class="cz_btn">
+				<a  th:if="${goodid!=null}" th:href="@{${'/wechat/details?goodid='+goodid}}" class="btn">产品详情</a>
+				<a href="../wechat/prize" class="btn">返回首页</a>
+			</div>
+			<div class="footer">技术详情：山东三向溯源信息科技有限公司</div>
+		</div>
+	</div>
+</body>
+</html>

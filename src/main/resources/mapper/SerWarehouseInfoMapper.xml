@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerWarehouseInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerWarehouseInfo">
+        <id column="id" property="id"/>
+        <result column="warehouse_name" property="warehouseName"/>
+        <result column="user_id" property="userId"/>
+        <result column="warehouse_person" property="warehousePerson"/>
+        <result column="warehouse_person_mobile" property="warehousePersonMobile"/>
+        <result column="total_inventory" property="totalInventory"/>
+        <result column="warehouse_remark" property="warehouseRemark"/>
+        <result column="warehouse_state" property="warehouseState"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectWarehouseVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryWarehouseCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.WarehouseVo"
+    >
+        select a.id as warehouse_id,a.warehouse_name,a.total_inventory,a.warehouse_person,
+               a.warehouse_person_mobile,a.warehouse_remark,a.warehouse_state
+        from t_ser_warehouse_info a
+             limit #{page},#{limit}
+    </select>
+
+    <select id="selectWarehouseVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryWarehouseCondition"
+            resultType="long">
+        select count(1) from t_ser_warehouse_info a
+        where 1 = 1
+    </select>
+
+    <select id="selectWarehousePersonVoByCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.WarehousePersonVo"
+    >
+        select DISTINCT b.user_id,c.user_name as warehousePerson
+        from t_sys_role_info a
+                 left join t_sys_user_role_info b on a.id = b.role_id
+                 left join t_sys_user_info c on b.user_id = c.id
+        where a.id = 4
+          and a.role_state = 0
+          and c.user_state = 0
+    </select>
+
+    <select id="selectWarehouseVoListByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryWarehouseCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.WarehouseVo"
+    >
+        select a.id as warehouseId,a.warehouse_name,a.total_inventory,a.warehouse_person,a.warehouse_person_mobile,a.warehouse_remark
+        from t_ser_warehouse_info a where 1=1
+        <if test="warehouseState!=null">
+            and a.warehouse_state = #{warehouseState}
+        </if>
+    </select>
+
+</mapper>

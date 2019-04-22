@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerPurchaseOrderInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerPurchaseOrderInfo">
+        <id column="id" property="id"/>
+        <result column="dealer_id" property="dealerId"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="order_state" property="orderState"/>
+        <result column="order_remark" property="orderRemark"/>
+        <result column="product_number" property="productNumber"/>
+        <result column="order_state" property="orderState"/>
+        <result column="user_id" property="userId"/>
+        <result column="financial_id" property="financialId"/>
+        <result column="idata1" property="idata1"/>
+        <result column="idata2" property="idata2"/>
+        <result column="idata3" property="idata3"/>
+        <result column="idata4" property="idata4"/>
+        <result column="sdata1" property="sdata1"/>
+        <result column="sdata2" property="sdata2"/>
+        <result column="sdata3" property="sdata3"/>
+        <result column="sdata4" property="sdata4"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectOrderPurchaseVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryOrderCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.OrderPurchaseVo"
+    >
+        select a.id as purchaseId,a.order_no,a.dealer_id,b.dealer_name,a.order_state,c.user_name AS createUserName,
+        d.user_name AS financialUserName,a.order_remark as remark
+        from t_ser_purchase_order_info a
+                left join t_ser_dealer_info b on a.dealer_id = b.id
+				left join t_sys_user_info c on a.user_id = c.id
+				left join t_sys_user_info d on a.financial_id = d.id
+        WHERE 1 = 1
+        <if test="orderState!=null">
+            and a.order_state = #{orderState}
+        </if>
+        <if test="orderNo!=null and orderNo!=''">
+            and a.order_no like CONCAT('%',#{orderNo},'%')
+        </if>
+        <if test="dealerName!=null and dealerName!=''">
+            and b.dealer_name like CONCAT('%',#{dealerName},'%')
+        </if>
+        order by a.create_time desc
+        limit #{page},#{limit}
+    </select>
+
+    <select id="selectOrderPurchaseVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryOrderCondition"
+            resultType="long"
+    >
+        select count(1) from t_ser_purchase_order_info a
+        left join t_ser_dealer_info b on a.dealer_id = b.id
+        <if test="orderState!=null">
+            and a.order_state = #{orderState}
+        </if>
+        <if test="orderNo!=null and orderNo!=''">
+            and a.order_no like CONCAT('%',#{orderNo},'%')
+        </if>
+        <if test="dealerName!=null and dealerName!=''">
+            and b.dealer_name like CONCAT('%',#{dealerName},'%')
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectOrderPurchaseVoListByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryOrderCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.OrderPurchaseVo"
+    >
+        select a.id as purchaseId,a.order_no,a.dealer_id,b.dealer_name,a.order_state,c.user_name as createUserName,
+        d.user_name as financialUserName,a.order_remark as remark,a.create_time as orderCreateTime
+        from t_ser_purchase_order_info a
+                left join t_ser_dealer_info b on a.dealer_id = b.id
+				left join t_sys_user_info c on a.user_id = c.id
+				left join t_sys_user_info d on a.financial_id = d.id
+        WHERE 1 = 1 and a.order_state = 2 or a.order_state = 3
+        order by a.create_time desc;
+    </select>
+
+    <select id="selectOrderCompleteListByCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.OrderPurchaseVo"
+    >
+        select a.id as purchaseId,a.order_no,a.dealer_id,b.dealer_name,a.order_state,c.user_name as createUserName,
+        d.user_name as financialUserName,a.order_remark as remark,a.create_time as orderCreateTime
+        from t_ser_purchase_order_info a
+                left join t_ser_dealer_info b on a.dealer_id = b.id
+				left join t_sys_user_info c on a.user_id = c.id
+				left join t_sys_user_info d on a.financial_id = d.id
+        WHERE 1 = 1 and a.order_state = 4 order by a.create_time desc
+    </select>
+
+</mapper>

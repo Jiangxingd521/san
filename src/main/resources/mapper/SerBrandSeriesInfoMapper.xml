@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerBrandSeriesInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerBrandSeriesInfo">
+        <id column="id" property="id"/>
+        <result column="brand_id" property="brandId"/>
+        <result column="brand_name" property="brandName"/>
+        <result column="series_name" property="seriesName"/>
+        <result column="short_title" property="shortTitle"/>
+        <result column="key_word" property="keyWord"/>
+        <result column="series_remark" property="seriesRemark"/>
+        <result column="series_state" property="seriesState"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectSeriesVoByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryBrandSeriesProductCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.SeriesVo"
+    >
+        select a.id as seriesId,a.brand_id,b.brand_name,a.series_name,a.series_remark,a.series_state
+        from t_ser_brand_series_info a left join t_ser_brand_info b on a.brand_id = b.id
+        where 1=1
+        <if test="brandId!=null">
+            and a.brand_id = #{brandId}
+        </if>
+        <if test="seriesState!=null">
+            and a.series_state = #{seriesState}
+        </if>
+        order by a.brand_id asc
+    </select>
+
+    <select id="selectSeriesVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryBrandSeriesProductCondition"
+            resultType="com.ningyang.os.action.output.vo.web.base.SeriesVo"
+    >
+        select a.id as seriesId,a.brand_id,b.brand_name,a.series_name,a.series_remark,a.series_state
+        from t_ser_brand_series_info a left join t_ser_brand_info b on a.brand_id = b.id
+        where 1=1
+        <if test="brandId!=null">
+            and a.brand_id = #{brandId}
+        </if>
+        <if test="seriesState!=null">
+            and a.series_state = #{seriesState}
+        </if>
+        order by a.update_time desc
+        limit #{page},#{limit}
+    </select>
+
+    <select id="selectSeriesVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.base.QueryBrandSeriesProductCondition"
+            resultType="long"
+    >
+        select count(1) from t_ser_brand_series_info a where 1=1
+        <if test="brandId!=null">
+            and a.brand_id = #{brandId}
+        </if>
+        <if test="seriesState!=null">
+            and a.series_state = #{seriesState}
+        </if>
+        order by a.update_time desc
+    </select>
+
+</mapper>

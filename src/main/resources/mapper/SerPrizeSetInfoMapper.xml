@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerPrizeSetInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerPrizeSetInfo">
+        <id column="prize_set_id" property="prizeSetId"/>
+        <result column="prize_manager_id" property="prizeManagerId"/>
+        <result column="prize_set_name" property="prizeSetName"/>
+        <result column="prod_id" property="prodId"/>
+        <result column="member_type" property="memberType"/>
+        <result column="region_id" property="regionId"/>
+        <result column="prize_quantity" property="prizeQuantity"/>
+        <result column="money" property="money"/>
+        <result column="money_end" property="moneyEnd"/>
+        <result column="ponit" property="ponit"/>
+        <result column="point_end" property="pointEnd"/>
+        <result column="prize_set_type" property="prizeSetType"/>
+        <result column="prize_mode_type" property="prizeModeType"/>
+        <result column="card_money" property="cardMoney"/>
+        <result column="card_coupon_money" property="cardCouponMoney"/>
+        <result column="prize_start_date" property="prizeStartDate"/>
+        <result column="prize_end_date" property="prizeEndDate"/>
+        <result column="user_id" property="userId"/>
+        <result column="idata1" property="idata1"/>
+        <result column="idata2" property="idata2"/>
+        <result column="idata3" property="idata3"/>
+        <result column="idata4" property="idata4"/>
+        <result column="sdata1" property="sdata1"/>
+        <result column="sdata2" property="sdata2"/>
+        <result column="sdata3" property="sdata3"/>
+        <result column="sdata4" property="sdata4"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectPrizeSetVoListByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryPrizeCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.PrizeSetVo"
+    >
+        SELECT a.prize_set_id,a.prize_set_name,a.prize_manager_id as managerId,c.prize_name as managerName,
+               a.prod_id,d.product_name,a.member_type,a.region_id,a.prize_quantity,a.money,a.money_end,
+               a.ponit,a.point_end,a.prize_set_type,a.prize_mode_type,a.card_money,a.card_coupon_money,
+               a.idata1 as setState,a.prize_start_date,a.prize_end_date,b.user_name
+        from t_ser_prize_set_info a
+          left join t_sys_user_info b on a.user_id=b.id
+          left join t_ser_prize_manager_info c on a.prize_manager_id=c.prize_manage_id
+          left join t_ser_brand_series_product_info d on a.prod_id=d.id
+        where 1=1
+        <if test="typeState!=null">
+          and a.idata1 = #{typeState}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectPrizeSetVoListPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryPrizeCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.PrizeSetVo"
+    >
+        select a.prize_set_id,a.prize_set_name,a.prize_manager_id as managerId,c.prize_name as managerName,
+        a.prod_id,d.product_name,a.member_type,a.region_id,a.prize_quantity,a.money,a.money_end,
+        a.ponit,a.point_end,a.prize_set_type,a.prize_mode_type,a.card_money,a.card_coupon_money,
+        a.idata1 as setState,a.prize_start_date,a.prize_end_date,b.user_name
+        from t_ser_prize_set_info a
+        left join t_sys_user_info b on a.user_id=b.id
+        left join t_ser_prize_manager_info c on a.prize_manager_id=c.prize_manage_id
+        left join t_ser_brand_series_product_info d on a.prod_id=d.id
+        where 1=1
+        <if test="typeState!=null">
+            and a.idata1 = #{typeState}
+        </if>
+        order by a.create_time desc
+        limit #{page},#{limit}
+    </select>
+
+    <select id="selectPrizeSetVoListPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryPrizeCondition"
+            resultType="long"
+    >
+        select count(1) from t_ser_prize_set_info a where 1=1
+        <if test="typeState!=null">
+            and a.idata1 = #{typeState}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectPrizeSetVoById"
+            parameterType="Long"
+            resultType="com.ningyang.os.action.output.vo.web.serve.PrizeSetVo"
+    >
+        select a.prize_set_id,a.prize_set_name,a.prize_manager_id as managerId,a.member_type,a.region_id,
+	    a.prize_quantity,a.money,a.money_end,a.ponit,a.point_end,a.prize_set_type,a.prize_mode_type,
+	    a.card_money,a.card_coupon_money,a.idata1 as setState,a.prize_start_date,a.prize_end_date
+        from t_ser_prize_set_info a where a.prize_set_id = #{prizeSetId}
+    </select>
+</mapper>

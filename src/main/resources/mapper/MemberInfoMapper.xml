@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.MemberInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.MemberInfo">
+        <id column="open_id" property="openId"/>
+        <result column="member_type_id" property="memberTypeId"/>
+        <result column="ali_pay_id" property="aliPayId"/>
+        <result column="subscribe" property="subscribe"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="sex" property="sex"/>
+        <result column="city" property="city"/>
+        <result column="country" property="country"/>
+        <result column="province" property="province"/>
+        <result column="language" property="language"/>
+        <result column="head_img_url" property="headImgUrl"/>
+        <result column="subscribe_time" property="subscribeTime"/>
+        <result column="union_id" property="unionId"/>
+        <result column="remark" property="remark"/>
+        <result column="group_id" property="groupId"/>
+        <result column="tagid_list" property="tagidList"/>
+        <result column="wechat_app_id" property="wechatAppId"/>
+        <result column="member_name" property="memberName"/>
+        <result column="member_mobile" property="memberMobile"/>
+        <result column="member_account" property="memberAccount"/>
+        <result column="member_password" property="memberPassword"/>
+        <result column="user_id" property="userId"/>
+        <result column="idata1" property="idata1"/>
+        <result column="idata2" property="idata2"/>
+        <result column="idata3" property="idata3"/>
+        <result column="idata4" property="idata4"/>
+        <result column="sdata1" property="sdata1"/>
+        <result column="sdata2" property="sdata2"/>
+        <result column="sdata3" property="sdata3"/>
+        <result column="sdata4" property="sdata4"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectMemberInfoVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryMemberCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.MemberInfoVo"
+    >
+        select a.nick_name,a.sex,a.country,a.province,a.city,a.create_time from t_member_info a
+        limit #{page},#{limit}
+    </select>
+
+    <select id="selectMemberInfoVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryMemberCondition"
+            resultType="long"
+    >
+        select count(1) from t_member_info
+    </select>
+
+</mapper>

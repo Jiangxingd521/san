@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.LSerWarehouseGoodsInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.LSerWarehouseGoodsInfo">
+        <id column="id" property="id"/>
+        <result column="source_type" property="sourceType"/>
+        <result column="warehouse_id" property="warehouseId"/>
+        <result column="purchase_id" property="purchaseId"/>
+        <result column="product_id" property="productId"/>
+        <result column="box_no" property="boxNo"/>
+        <result column="warehouse_in_no" property="warehouseInNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="remark" property="remark"/>
+        <result column="warehouse_in_time" property="warehouseInTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectGoodsPutInVoPageByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryGoodsPutCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.GoodsPutInVo"
+    >
+        select b.warehouse_name,f.brand_name,e.series_name,d.product_name,
+               c.user_name,a.create_time,COUNT( DISTINCT a.box_no ) AS boxCount
+        from l_ser_warehouse_goods_info a
+                left join t_ser_warehouse_info b on a.warehouse_id = b.id
+                left join t_sys_user_info c on a.user_id = c.id
+                left join t_ser_brand_series_product_info d on a.product_id = d.id
+                left join t_ser_brand_series_info e on e.id = d.series_id
+                left join t_ser_brand_info f on e.brand_id = f.id
+	    group by b.warehouse_name,f.brand_name,e.series_name,d.product_name,c.user_name,a.create_time
+	    ORDER BY a.create_time desc
+                 limit #{page},#{limit}
+    </select>
+
+    <select id="selectGoodsPutInVoPageCountByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryGoodsPutCondition"
+            resultType="long"
+    >
+        select COUNT(DISTINCT (a.warehouse_in_no)) from l_ser_warehouse_goods_info a
+    </select>
+
+    <select id="getWarehouseBoxCount" parameterType="Long" resultType="int">
+        select count(DISTINCT a.box_no) from l_ser_warehouse_goods_info a where a.warehouse_id = #{warehouseId}
+    </select>
+
+    <select id="selectApiWarehouseGoodsVo"
+            parameterType="String"
+            resultType="com.ningyang.os.action.output.vo.api.ApiWarehouseGoodsVo"
+    >
+        select a.product_id,e.brand_name,d.series_name,c.product_name,b.warehouse_name
+            from l_ser_warehouse_goods_info a
+            left join t_ser_warehouse_info b on a.warehouse_id = b.id
+            left join t_ser_brand_series_product_info c on a.product_id = c.id
+            left join t_ser_brand_series_info d on c.series_id = d.id
+            left join t_ser_brand_info e on d.brand_id = e.id
+            where c.product_name = #{productName}
+            group by a.product_id,e.brand_name,d.series_name,c.product_name,b.warehouse_name
+    </select>
+
+    <select id="selectApiWarehouseGoodsInfoVo"
+            parameterType="Long"
+            resultType="com.ningyang.os.action.output.vo.api.ApiWarehouseGoodsInfoVo"
+    >
+        select d.brand_name,c.series_name,b.product_name,a.product_id,e.warehouse_name,
+        a.warehouse_in_time,count(a.warehouse_in_time) as boxCount
+        from l_ser_warehouse_goods_info a
+        left join t_ser_brand_series_product_info b on a.product_id=b.id
+        left join t_ser_brand_series_info c on b.series_id=c.id
+        left join t_ser_brand_info d on c.brand_id=d.id
+        left join t_ser_warehouse_info e on a.warehouse_id=e.id
+        where a.product_id=#{productId}
+        group by d.brand_name,c.series_name,b.product_name,a.product_id,
+        e.warehouse_name,a.warehouse_in_time
+    </select>
+
+    <select id="selectWarehouseInventoryVoById"
+            parameterType="Long"
+            resultType="com.ningyang.os.action.output.vo.web.serve.WarehouseInventoryVo"
+    >
+        select a.product_id,d.product_name,e.series_name,f.brand_name, count(product_id) as usedTotalInventory
+        from l_ser_warehouse_goods_info a
+        left join t_ser_warehouse_goods_info b on a.box_no = b.box_no
+        left join t_ser_warehouse_info c on a.warehouse_id = c.id
+        left join t_ser_brand_series_product_info d on a.product_id = d.id
+        left join t_ser_brand_series_info e on d.series_id = e.id
+        left join t_ser_brand_info f on e.brand_id = f.id
+        where b.goods_state=1 and a.warehouse_id = #{warehouseId}
+        GROUP BY a.product_id,d.product_name,e.series_name,f.brand_name
+    </select>
+
+    <select id="getOrderInBoxCount" parameterType="Long" resultType="int">
+        select count(1) from l_ser_warehouse_goods_info a where a.source_type=1 and a.product_id = #{productId}
+    </select>
+
+    <select id="selectGoodsPutInVoByCondition"
+            parameterType="com.ningyang.os.action.input.condition.serve.QueryGoodsPutCondition"
+            resultType="com.ningyang.os.action.output.vo.web.serve.GoodsPutInVo"
+    >
+        select b.warehouse_name,f.brand_name,e.series_name,d.product_name,
+               c.user_name,a.create_time,COUNT( DISTINCT a.box_no ) AS boxCount
+        from l_ser_warehouse_goods_info a
+                left join t_ser_warehouse_info b on a.warehouse_id = b.id
+                left join t_sys_user_info c on a.user_id = c.id
+                left join t_ser_brand_series_product_info d on a.product_id = d.id
+                left join t_ser_brand_series_info e on e.id = d.series_id
+                left join t_ser_brand_info f on e.brand_id = f.id
+				where a.source_type=1 and a.product_id = #{purchaseId}
+	    group by b.warehouse_name,f.brand_name,e.series_name,d.product_name,c.user_name,a.create_time
+	    ORDER BY a.create_time desc
+    </select>
+
+
+</mapper>

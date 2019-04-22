@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerWarehouseGoodsInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerWarehouseGoodsInfo">
+        <id column="id" property="id"/>
+        <result column="source_type" property="sourceType"/>
+        <result column="warehouse_id" property="warehouseId"/>
+        <result column="goods_id" property="goodsId"/>
+        <result column="box_no" property="boxNo"/>
+        <result column="goods_state" property="goodsState"/>
+        <result column="warehouse_in_no" property="warehouseInNo"/>
+        <result column="user_id" property="userId"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="getWarehouseGoodsCount"
+            parameterType="Long"
+            resultType="int"
+    >
+        select count(1) from l_ser_warehouse_goods_info a
+        left join t_ser_warehouse_goods_info b on a.box_no=b.box_no
+        where b.goods_state=1 and a.product_id = #{productId}
+    </select>
+
+</mapper>

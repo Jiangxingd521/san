@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ningyang.os.dao.SerBrandSeriesProductCodeInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ningyang.os.pojo.SerBrandSeriesProductCodeInfo">
+        <result column="id" property="id"/>
+        <result column="product_id" property="productId"/>
+        <result column="code_id" property="codeId"/>
+    </resultMap>
+
+    <select id="selectProductCodeMake"
+            parameterType="Long"
+            resultType="com.ningyang.os.action.output.dto.serve.ProductCodeDto"
+    >
+        select a.product_id,a.code_id,b.code_name from t_ser_brand_series_product_code_info a
+                left join t_ser_code_type3_info b on a.code_id = b.id
+        where a.product_id=#{productId} ORDER BY a.code_id
+    </select>
+
+</mapper>

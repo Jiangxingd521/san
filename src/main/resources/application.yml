@@ -1,0 +1,67 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /node
+spring:
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/os_node?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT
+    username: root
+    password: root
+    druid:
+      initial-size: 10
+      max-active: 100
+      min-idle: 5
+      max-wait: 60000
+      time-between-connect-error-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall,log4j
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      validation-query: SELECT 1 FROM DUAL
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: utf-8
+    check-template-location: true
+    servlet:
+      content-type: text/html
+  jmx:
+    default-domain: os_node
+
+#mybaits-plus config
+mybatisPlus:
+  mapperLocations: classpath*:/mapper/*Mapper.xml
+  typeAliasesPackage: com.ningyang.os.pojo
+  global-config:
+    db-config:
+      id-type: auto
+      field-strategy: ignored
+      column-like: true
+    banner: false
+  configuration:
+    mapUnderscoreToCamelCase: true
+    cacheEnabled: true
+
+logging:
+  path: /Users/kaider/temp/WorkLog/node
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+  level:
+    com.ningyang.os.dao: DEBUG
+
+os-config:
+  default-password: 12345678
+#  default-templateUrl: http://www.headingtech.com/center/tz/
+  default-templateUrl: http://115.29.233.241/center/tz/
+  default-centerUrl: http://localhost:8083/center/
+#  default-centerUrl: http://115.29.233.241/center/
+  default-qrcode-template-table: t_ser_apply_code_dateTemplate
+  default-qrcode-template-file-path: /Users/kaider/temp/WorkLog/qrcode/
